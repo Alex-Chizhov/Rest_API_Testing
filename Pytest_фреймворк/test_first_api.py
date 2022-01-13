@@ -11,14 +11,14 @@ class TestFirstAPI:
         data = {'name': name}
 
         response = requests.get(url, params=data)
-        assert response.status_code == 200, "Wrong responce code"
+        assert response.status_code == 200, "Wrong response code"
 
         response_dict = response.json()
-        assert "answer" in response_dict, "There is no 'answer' fueld in response"
+        assert "answer" in response_dict, "There is no 'answer' field in response"
 
         if name == "":
-            expectrd_response_text = "Hello, someone"
+            expected_response_text = "Hello, someone"
         else:
-            expectrd_response_text = f"Hello, {name}"
-        acttual_response_text = response_dict['answer']
-        assert expectrd_response_text == acttual_response_text, "Acttual response text is not correct"
+            expected_response_text = f"Hello, {name}"
+        actual_response_text = response_dict['answer']
+        assert expected_response_text == actual_response_text, "Actual response text is not correct"
