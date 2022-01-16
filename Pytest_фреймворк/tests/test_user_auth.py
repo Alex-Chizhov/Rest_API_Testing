@@ -1,6 +1,7 @@
 import pytest
 import requests
 from ..lib.base_case import BaseCase
+from ..lib.assertions import Asserions
 
 class TestUserAuth(BaseCase):
 
@@ -25,11 +26,13 @@ class TestUserAuth(BaseCase):
                                  headers={"x-csrf-token": self.token},
                                  cookies={"auth_sid": self.auth_sid}
                                  )
-        assert "user_id" in response2.json(), "There is no user_id in second response"
-        user_id_from_auth_method = response2.json()["user_id"]
 
-        assert self.user_id_from_login_method == user_id_from_auth_method, "User id from auth method is not equal user id from login method"
-
+        Asserions.assert_json_value_by_name(
+            response2,
+            key_name="user_id",
+            expected_value=self.user_id_from_login_method,
+            error_message="User id from auth method is not equal user id from login method"
+        )
 
     @pytest.mark.parametrize("condition", exclude_params)
     def test_negative_auth_user(self, condition):
@@ -41,7 +44,9 @@ class TestUserAuth(BaseCase):
             response2 = requests.get("https://playground.learnqa.ru/api/user/auth",
                                      cookies={"auth_sid": self.auth_sid})
 
-        assert "user_id" in response2.json(), "There is no user_id in second response"
-
-        user_id_from_auth_method = response2.json()["user_id"]
-        assert user_id_from_auth_method == 0, "User is authorized with data only: {condition}"
+        Asserions.assert_json_value_by_name(
+            response2,
+            key_name="user_id",
+            expected_value=0,
+            error_message=f"User is authorized with data only: {condition}"
+        )
