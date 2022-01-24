@@ -1,8 +1,10 @@
+import allure
 import pytest
 from ..lib.mod_requests import ModRequests
 from ..lib.base_case import BaseCase
 from ..lib.assertions import Asserions
 
+@allure.epic("Authorization")
 class TestUserAuth(BaseCase):
 
     exclude_params = ["no_cookie", "no_token"]
@@ -20,6 +22,7 @@ class TestUserAuth(BaseCase):
         self.user_id_from_login_method = self.get_json_value(response1, "user_id")
 
 
+    @allure.description("Test successfully authorize user by email and password")
     def test_auth_user(self):
 
         response2 = ModRequests.get("/user/auth",
@@ -34,6 +37,7 @@ class TestUserAuth(BaseCase):
             error_message="User id from auth method is not equal user id from login method"
         )
 
+    @allure.description("Test for negative authorization without sending auth cookie or token")
     @pytest.mark.parametrize("condition", exclude_params)
     def test_negative_auth_user(self, condition):
 
